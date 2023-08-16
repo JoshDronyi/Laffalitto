@@ -1,24 +1,18 @@
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.probrotechsolutions.laffalitto.Greeting
+import com.probrotechsolutions.laffalitto.HomePage
+import com.probrotechsolutions.laffalitto.actual.EnvironmentVariables
+import moe.tlaster.precompose.PreComposeWindow
 
 fun main() {
     application {
         val windowState = rememberWindowState()
-
-        Window(
+        PreComposeWindow(
             onCloseRequest = ::exitApplication,
             state = windowState,
             title = "My Project"
         ) {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                Text(text = Greeting().greet())
-            }
+            HomePage(EnvironmentVariables())
         }
     }
 }

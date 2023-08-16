@@ -11,7 +11,9 @@ pluginManagement {
 
         kotlin("multiplatform").version(kotlinVersion)
         kotlin("android").version(kotlinVersion)
-        id("jvm").version(kotlinVersion)
+        kotlin("jvm").version(kotlinVersion)
+        id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
+
 
         id("com.android.application").version(agpVersion)
         id("com.android.library").version(agpVersion)

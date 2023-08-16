@@ -1,20 +1,22 @@
 plugins {
     id("com.android.application")
+    id("org.jetbrains.compose")
     kotlin("android")
 }
 
 android {
     namespace = "com.probrotechsolutions.laffalitto.android"
-    compileSdk = 34
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.probrotechsolutions.laffalitto.android"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-    }
-    buildFeatures {
-        compose = true
+
+//
+//        buildConfigField("String", "APIKEY_JOKE", "${project.findProperty("apiKey.joke")}")
+//        buildConfigField("String", "HOST.JOKE", "${project.findProperty("host.joke")}")
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.7"
