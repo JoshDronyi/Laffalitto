@@ -2,7 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version ("1.4.3")
+    id("org.jetbrains.compose")
 }
 
 group = "com.probrotechsolutions.laffalitto"
@@ -26,6 +26,7 @@ kotlin {
                 api(compose.ui)
                 api(compose.materialIconsExtended)
 
+                //implementation("io.ktor:ktor-client-cio:2.3.2")
                 implementation(project(":shared"))
             }
         }
