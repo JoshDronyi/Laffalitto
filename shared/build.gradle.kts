@@ -64,6 +64,10 @@ kotlin {
 
                 //Coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+                //Kermit Logger
+                implementation("co.touchlab:kermit:2.0.0-RC5") //Add latest version
+
             }
         }
         val commonTest by getting {
@@ -118,8 +122,6 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 24
-//        buildConfigField("String", "APIKEY_JOKE", "${project.findProperty("apiKey.joke")}")
-//        buildConfigField("String", "HOST.JOKE", "${project.findProperty("host.joke")}")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

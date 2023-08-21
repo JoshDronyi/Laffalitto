@@ -1,8 +1,8 @@
 package com.probrotechsolutions.laffalitto.model.mappers
 
 import com.probrotechsolutions.laffalitto.Utils.toAlias
-import com.probrotechsolutions.laffalitto.model.local.jokes.JokeCategory
-import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponseDTO
+import com.probrotechsolutions.laffalitto.model.local.jokeCategory.JokeCategory
+import com.probrotechsolutions.laffalitto.model.network.dto.jokeCategoryResponse.JokeCategoryResponseDTO
 
 class JokeCategoryResponseMapper : Mapper<JokeCategoryResponseDTO, List<JokeCategory>> {
     override fun invoke(dto: JokeCategoryResponseDTO): List<JokeCategory> = with(dto) {

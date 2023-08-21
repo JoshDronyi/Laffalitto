@@ -18,6 +18,7 @@ open class KtorClient {
                 Json {
                     isLenient = true
                     explicitNulls = true
+                    coerceInputValues = true
                     ignoreUnknownKeys = true
                 }
             }

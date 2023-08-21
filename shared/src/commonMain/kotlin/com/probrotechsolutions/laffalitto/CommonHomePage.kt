@@ -22,8 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import com.probrotechsolutions.laffalitto.actual.EnvironmentVariables
-import com.probrotechsolutions.laffalitto.ui.joke.JokePage
+import com.probrotechsolutions.laffalitto.ui.joke.JokeSection
 import com.probrotechsolutions.laffalitto.viewmodel.TestViewModel
+import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.stateholder.LocalSavedStateHolder
 import moe.tlaster.precompose.stateholder.LocalStateHolder
 import moe.tlaster.precompose.stateholder.SavedStateHolder
@@ -36,8 +37,9 @@ fun CommonHomePage(
     environmentVariables: EnvironmentVariables
 ) {
     LaffaLittoTheme {
+        val navigator = rememberNavigator()
         Scaffold {
-            JokePage(
+            JokeSection(
                 environmentVariables
             )
         }
@@ -48,15 +50,8 @@ fun CommonHomePage(
 fun LaffaLittoTheme(
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalStateHolder provides StateHolder()) {
-        val savedStateHolder = SavedStateHolder(
-            TAG, SaveableStateRegistry(restoredValues = mapOf(), canBeSaved = { true })
-        )
-        CompositionLocalProvider(LocalSavedStateHolder provides savedStateHolder) {
-            MaterialTheme {
-                content()
-            }
-        }
+    MaterialTheme {
+        content()
     }
 }
 
