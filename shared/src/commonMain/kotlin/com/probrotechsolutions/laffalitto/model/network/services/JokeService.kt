@@ -10,7 +10,7 @@ import kotlinx.serialization.json.Json
 
 class JokeService(
     private val environmentVariables: EnvironmentVariables
-) : KtorClient() {
+) : KtorClient(), JokeServiceContract {
     companion object {
         private const val BASE_URL = "https://jokeapi-v2.p.rapidapi.com/"
         private const val CATEGORY_ENDPOINT = "categories?format=json"
