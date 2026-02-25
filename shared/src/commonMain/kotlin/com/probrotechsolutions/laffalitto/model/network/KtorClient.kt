@@ -11,15 +11,13 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalSerializationApi::class)
-open class KtorClient {
-    protected val client by lazy {
-        HttpClient() {
-            install(ContentNegotiation.key.name) {
-                Json {
-                    isLenient = true
-                    explicitNulls = true
-                    ignoreUnknownKeys = true
-                }
+open class KtorClient(httpClient: HttpClient? = null) {
+    protected val client: HttpClient = httpClient ?: HttpClient() {
+        install(ContentNegotiation.key.name) {
+            Json {
+                isLenient = true
+                explicitNulls = true
+                ignoreUnknownKeys = true
             }
         }
     }

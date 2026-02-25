@@ -1,16 +1,18 @@
 package com.probrotechsolutions.laffalitto.model.network.services
 
-import com.probrotechsolutions.laffalitto.actual.EnvironmentVariables
+import com.probrotechsolutions.laffalitto.actual.EnvironmentVariablesContract
 import com.probrotechsolutions.laffalitto.model.network.KtorClient
 import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponseDTO
+import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 
 class JokeService(
-    private val environmentVariables: EnvironmentVariables
-) : KtorClient(), JokeServiceContract {
+    private val environmentVariables: EnvironmentVariablesContract,
+    httpClient: HttpClient? = null
+) : KtorClient(httpClient), JokeServiceContract {
     companion object {
         private const val BASE_URL = "https://jokeapi-v2.p.rapidapi.com/"
         private const val CATEGORY_ENDPOINT = "categories?format=json"
@@ -22,7 +24,7 @@ class JokeService(
         client
     }
 
-    suspend fun getJokeCategories(): Result<JokeCategoryResponseDTO> {
+    override suspend fun getJokeCategories(): Result<JokeCategoryResponseDTO> {
         val response = jokeClient.get(BASE_URL + CATEGORY_ENDPOINT) {
             headers {
                 append(APIKEY_TAG, environmentVariables.apiKey)
