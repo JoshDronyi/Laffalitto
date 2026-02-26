@@ -4,6 +4,7 @@ import com.probrotechsolutions.laffalitto.actual.EnvironmentVariables
 import com.probrotechsolutions.laffalitto.model.network.KtorClient
 import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponseDTO
 import com.probrotechsolutions.laffalitto.model.network.dto.JokeResponseDTO
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.statement.bodyAsText
@@ -11,8 +12,9 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json
 
 class JokeService(
-    private val environmentVariables: EnvironmentVariables
-) : KtorClient() {
+    private val environmentVariables: EnvironmentVariables,
+    engine: HttpClientEngine? = null
+) : KtorClient(engine), JokeServiceInterface {
     companion object {
         private const val BASE_URL = "https://jokeapi-v2.p.rapidapi.com/"
         private const val CATEGORY_ENDPOINT = "categories?format=json"
@@ -23,7 +25,7 @@ class JokeService(
 
     private val jokeClient by lazy { client }
 
-    suspend fun getJokeCategories(): Result<JokeCategoryResponseDTO> = try {
+    override suspend fun getJokeCategories(): Result<JokeCategoryResponseDTO> = try {
         val response = jokeClient.get(BASE_URL + CATEGORY_ENDPOINT) {
             headers {
                 append(APIKEY_TAG, environmentVariables.apiKey)
@@ -41,7 +43,7 @@ class JokeService(
         Result.failure(ex)
     }
 
-    suspend fun getJoke(category: String): Result<JokeResponseDTO> = try {
+    override suspend fun getJoke(category: String): Result<JokeResponseDTO> = try {
         val response = jokeClient.get(BASE_URL + JOKE_ENDPOINT + category) {
             headers {
                 append(APIKEY_TAG, environmentVariables.apiKey)

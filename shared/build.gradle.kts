@@ -69,6 +69,16 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
+            }
+        }
+
+        val desktopTest by getting {
+            dependsOn(commonTest)
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
 
