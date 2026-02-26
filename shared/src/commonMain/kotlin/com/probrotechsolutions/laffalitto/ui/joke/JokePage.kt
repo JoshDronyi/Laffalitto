@@ -10,12 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import com.probrotechsolutions.laffalitto.model.repositories.JokeRepository
 import com.probrotechsolutions.laffalitto.viewmodel.JokeViewModel
 import moe.tlaster.precompose.viewmodel.viewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JokePage(
     environmentVariables: EnvironmentVariables,
@@ -102,7 +104,7 @@ fun JokeCategoryItem(
     ) {
         Text(
             text = category.category,
-            style = MaterialTheme.typography.subtitle1
+            style = MaterialTheme.typography.titleMedium
         )
         if (category.aliases.isNotEmpty()) {
             AliasRow(aliases = category.aliases)
@@ -116,8 +118,8 @@ private fun AliasRow(aliases: List<Alias>) {
         aliases.forEach { alias ->
             Text(
                 text = alias.name,
-                style = MaterialTheme.typography.caption,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
     }
@@ -127,8 +129,8 @@ private fun AliasRow(aliases: List<Alias>) {
 fun ErrorMessage(error: String, onRetry: () -> Unit) {
     Text(
         text = "Something went wrong: $error",
-        color = MaterialTheme.colors.error,
-        style = MaterialTheme.typography.body1
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodyLarge
     )
     Spacer(modifier = Modifier.height(16.dp))
     Button(onClick = onRetry) {

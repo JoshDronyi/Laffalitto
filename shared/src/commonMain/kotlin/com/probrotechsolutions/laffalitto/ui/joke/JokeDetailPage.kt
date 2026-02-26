@@ -7,16 +7,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,6 +34,7 @@ import com.probrotechsolutions.laffalitto.model.repositories.JokeRepository
 import com.probrotechsolutions.laffalitto.viewmodel.JokeDetailViewModel
 import moe.tlaster.precompose.viewmodel.viewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JokeDetailPage(
     category: String,
@@ -81,8 +83,8 @@ fun JokeDetailPage(
                 state.errorMsg.isNotEmpty() -> {
                     Text(
                         text = state.errorMsg,
-                        color = MaterialTheme.colors.error,
-                        style = MaterialTheme.typography.body1
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { viewModel.fetchJoke() }) {
@@ -100,14 +102,14 @@ private fun JokeContent(joke: Joke) {
         JokeType.SINGLE -> {
             Text(
                 text = joke.joke ?: "",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.fillMaxWidth()
             )
         }
         JokeType.TWO_PART -> {
             Text(
                 text = joke.setup ?: "",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -115,7 +117,7 @@ private fun JokeContent(joke: Joke) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = joke.delivery ?: "",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.fillMaxWidth()
             )
         }
