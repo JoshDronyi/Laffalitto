@@ -2,6 +2,7 @@ package com.probrotechsolutions.laffalitto.model.network
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.statement.readBytes
@@ -22,6 +23,11 @@ open class KtorClient(private val engine: HttpClientEngine? = null) {
                         ignoreUnknownKeys = true
                     })
                 }
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 15_000
+                    connectTimeoutMillis = 10_000
+                    socketTimeoutMillis = 15_000
+                }
             }
         } else {
             HttpClient {
@@ -31,6 +37,11 @@ open class KtorClient(private val engine: HttpClientEngine? = null) {
                         explicitNulls = true
                         ignoreUnknownKeys = true
                     })
+                }
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 15_000
+                    connectTimeoutMillis = 10_000
+                    socketTimeoutMillis = 15_000
                 }
             }
         }

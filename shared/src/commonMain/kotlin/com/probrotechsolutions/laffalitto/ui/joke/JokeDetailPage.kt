@@ -76,7 +76,10 @@ fun JokeDetailPage(
                 state.joke != null -> {
                     state.joke?.let { JokeContent(joke = it) }
                     Spacer(modifier = Modifier.height(24.dp))
-                    Button(onClick = { viewModel.fetchJoke() }) {
+                    Button(
+                        onClick = { viewModel.fetchJoke() },
+                        enabled = !state.isLoading
+                    ) {
                         Text("Another one")
                     }
                 }

@@ -73,6 +73,17 @@ fun JokePage(
                         onRetry = { jokeVm.getCategories() }
                     )
                 }
+                else -> {
+                    Text(
+                        text = "No categories available",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { jokeVm.getCategories() }) {
+                        Text("Retry")
+                    }
+                }
             }
         }
     }
