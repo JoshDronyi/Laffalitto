@@ -72,7 +72,7 @@ fun JokeDetailPage(
                     CircularProgressIndicator()
                 }
                 state.joke != null -> {
-                    JokeContent(joke = state.joke!!)
+                    state.joke?.let { JokeContent(joke = it) }
                     Spacer(modifier = Modifier.height(24.dp))
                     Button(onClick = { viewModel.fetchJoke() }) {
                         Text("Another one")

@@ -39,7 +39,7 @@ class JokeViewModel(
                 _jokeState.update {
                     it.copy(
                         isLoading = false,
-                        errorMsg = categories.exceptionOrNull()?.message ?: "UnKnown Error"
+                        errorMsg = categories.exceptionOrNull()?.message ?: "Unknown Error"
                     )
                 }
             }

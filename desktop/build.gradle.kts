@@ -38,7 +38,7 @@ compose.desktop {
         mainClass = "MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "MyProject"
+            packageName = "Laffalitto"
             macOS {
                 bundleID = "com.probrotechsolutions.laffalitto"
             }

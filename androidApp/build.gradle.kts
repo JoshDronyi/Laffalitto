@@ -1,3 +1,7 @@
+val localProps = java.util.Properties().also { p ->
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { p.load(it) }
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.compose")
@@ -14,9 +18,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-//
-//        buildConfigField("String", "APIKEY_JOKE", "${project.findProperty("apiKey.joke")}")
-//        buildConfigField("String", "HOST.JOKE", "${project.findProperty("host.joke")}")
+        buildConfigField("String", "APIKEY_JOKE", "\"${localProps.getProperty("apiKey.joke", "")}\"")
+        buildConfigField("String", "HOST_JOKE",   "\"${localProps.getProperty("host.joke", "")}\"")
+    }
+    buildFeatures {
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.7"
