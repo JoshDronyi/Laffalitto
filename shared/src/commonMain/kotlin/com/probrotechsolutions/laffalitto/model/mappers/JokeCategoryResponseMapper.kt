@@ -7,7 +7,6 @@ import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponse
 class JokeCategoryResponseMapper : Mapper<JokeCategoryResponseDTO, List<JokeCategory>> {
     override fun invoke(dto: JokeCategoryResponseDTO): List<JokeCategory> = with(dto) {
         categories.map { category ->
-            categoryAliases.any { it.resolved == category }
             JokeCategory(
                 category = category,
                 aliases = categoryAliases.filter { it.resolved == category }.map { it.toAlias() }

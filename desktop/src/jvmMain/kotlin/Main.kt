@@ -10,7 +10,7 @@ fun main() {
         PreComposeWindow(
             onCloseRequest = ::exitApplication,
             state = windowState,
-            title = "My Project"
+            title = "Laffalitto"
         ) {
             HomePage(EnvironmentVariables())
         }

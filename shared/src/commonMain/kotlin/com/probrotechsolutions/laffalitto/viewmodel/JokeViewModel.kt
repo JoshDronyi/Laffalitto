@@ -1,8 +1,7 @@
 package com.probrotechsolutions.laffalitto.viewmodel
 
 import com.probrotechsolutions.laffalitto.model.local.jokes.JokeCategory
-import com.probrotechsolutions.laffalitto.model.repositories.JokeRepository
-import kotlinx.coroutines.CoroutineScope
+import com.probrotechsolutions.laffalitto.model.repositories.JokeRepositoryInterface
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,8 +10,7 @@ import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
 
 class JokeViewModel(
-    private val jokeRepo: JokeRepository,
-    coroutineScope: CoroutineScope? = null
+    private val jokeRepo: JokeRepositoryInterface
 ) : ViewModel() {
 
     private val scope: CoroutineScope = coroutineScope ?: viewModelScope
@@ -26,7 +24,7 @@ class JokeViewModel(
 
     fun getCategories() = scope.launch {
         _jokeState.update {
-            it.copy(isLoading = true)
+            it.copy(isLoading = true, errorMsg = "")
         }
         val categories = jokeRepo.getJokeCategories()
         when {
@@ -43,7 +41,7 @@ class JokeViewModel(
                 _jokeState.update {
                     it.copy(
                         isLoading = false,
-                        errorMsg = categories.exceptionOrNull()?.message ?: "UnKnown Error"
+                        errorMsg = categories.exceptionOrNull()?.message ?: "Unknown Error"
                     )
                 }
             }

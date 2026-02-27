@@ -46,7 +46,8 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.animation)
-                api(compose.material)
+                api(compose.material3)
+                api(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 api(compose.components.resources)
 
@@ -59,7 +60,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-cio:2.3.2")
 
-                implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
                 //Coroutines
@@ -70,7 +71,15 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-                implementation("io.ktor:ktor-client-mock:2.3.2")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
+            }
+        }
+
+        val desktopTest by getting {
+            dependsOn(commonTest)
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
 

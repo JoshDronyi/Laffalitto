@@ -1,8 +1,10 @@
 package com.probrotechsolutions.laffalitto.actual
 
-actual class EnvironmentVariables : EnvironmentVariablesContract {
-    actual val apiKey: String
-        get() = "c6a27b3cd7mshfc50b4cd288dd8ap15319bjsnfc99f7ad8a45" // BUildConfig.APIKEY_JOKE
-    actual val host: String
-        get() = "jokeapi-v2.p.rapidapi.com"//BuildConfig.HOST_JOKE
+actual class EnvironmentVariables {
+    private val props = java.util.Properties().also { p ->
+        java.io.File("local.properties").takeIf { it.exists() }
+            ?.inputStream()?.use { p.load(it) }
+    }
+    actual val apiKey: String get() = props.getProperty("apiKey.joke", "")
+    actual val host: String get() = props.getProperty("host.joke", "")
 }

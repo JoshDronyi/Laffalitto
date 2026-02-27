@@ -1,138 +1,82 @@
 package com.probrotechsolutions.laffalitto.model.repositories
 
+import com.probrotechsolutions.laffalitto.fakes.FakeJokeService
+import com.probrotechsolutions.laffalitto.fakes.defaultCategoriesDTO
+import com.probrotechsolutions.laffalitto.model.local.jokes.JokeType
 import com.probrotechsolutions.laffalitto.model.mappers.JokeCategoryResponseMapper
-import com.probrotechsolutions.laffalitto.model.network.dto.CategoryAliaseDTO
-import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponseDTO
-import com.probrotechsolutions.laffalitto.model.network.services.JokeServiceContract
-import kotlinx.coroutines.test.StandardTestDispatcher
+import com.probrotechsolutions.laffalitto.model.mappers.JokeResponseMapper
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class JokeRepositoryTest {
 
-    // region: fakes
-
-    private class FakeJokeService(
-        private val response: Result<JokeCategoryResponseDTO>
-    ) : JokeServiceContract {
-        override suspend fun getJokeCategories() = response
-    }
-
-    private class ThrowingJokeService(
-        private val exception: Exception
-    ) : JokeServiceContract {
-        override suspend fun getJokeCategories(): Result<JokeCategoryResponseDTO> {
-            throw exception
-        }
-    }
-
-    private val sampleDto = JokeCategoryResponseDTO(
-        categories = listOf("Programming", "Dark"),
-        categoryAliases = listOf(
-            CategoryAliaseDTO(alias = "Coding", resolved = "Programming")
-        ),
-        error = false,
-        timestamp = 0L
-    )
-
-    private fun makeRepository(service: JokeServiceContract) = JokeRepository(
+    private fun makeRepo(service: FakeJokeService = FakeJokeService()) = JokeRepository(
         jokeService = service,
         jokeResponseMapper = JokeCategoryResponseMapper(),
-        dispatcher = StandardTestDispatcher()
+        jokeMapper = JokeResponseMapper(),
+        dispatcher = UnconfinedTestDispatcher()
     )
 
-    // endregion
-
-    // region: success path
-
     @Test
-    fun `returns success with mapped categories when service succeeds`() = runTest {
-        val repo = makeRepository(FakeJokeService(Result.success(sampleDto)))
-
-        val result = repo.getJokeCategories()
-
+    fun `getJokeCategories success maps DTO to domain list`() = runTest {
+        val result = makeRepo().getJokeCategories()
         assertTrue(result.isSuccess)
-        val categories = result.getOrThrow()
+        val categories = result.getOrNull()!!
         assertEquals(2, categories.size)
         assertEquals("Programming", categories[0].category)
-        assertEquals("Dark", categories[1].category)
+        assertEquals("Misc", categories[1].category)
     }
 
     @Test
-    fun `maps aliases onto matching categories`() = runTest {
-        val repo = makeRepository(FakeJokeService(Result.success(sampleDto)))
-
-        val categories = repo.getJokeCategories().getOrThrow()
-
+    fun `getJokeCategories aliases are correctly mapped`() = runTest {
+        val result = makeRepo().getJokeCategories()
+        val categories = result.getOrNull()!!
         val programming = categories.first { it.category == "Programming" }
         assertEquals(1, programming.aliases.size)
-        assertEquals("Coding", programming.aliases[0].name)
+        assertEquals("Dev", programming.aliases[0].name)
     }
 
     @Test
-    fun `returns empty list when service returns dto with no categories`() = runTest {
-        val emptyDto = JokeCategoryResponseDTO(
-            categories = emptyList(),
-            categoryAliases = emptyList(),
-            error = false,
-            timestamp = 0L
-        )
-        val repo = makeRepository(FakeJokeService(Result.success(emptyDto)))
+    fun `getJokeCategories service failure propagates as Result failure`() = runTest {
+        val service = FakeJokeService(categoriesResult = Result.failure(Throwable("Network error")))
+        val result = makeRepo(service).getJokeCategories()
+        assertTrue(result.isFailure)
+        assertEquals("Network error", result.exceptionOrNull()?.message)
+    }
 
-        val result = repo.getJokeCategories()
-
+    @Test
+    fun `getJoke success maps DTO to Joke domain model`() = runTest {
+        val result = makeRepo().getJoke("Programming")
         assertTrue(result.isSuccess)
-        assertTrue(result.getOrThrow().isEmpty())
-    }
-
-    // endregion
-
-    // region: failure path — service returns Result.failure
-
-    @Test
-    fun `returns failure when service returns Result failure`() = runTest {
-        val error = RuntimeException("network error")
-        val repo = makeRepository(FakeJokeService(Result.failure(error)))
-
-        val result = repo.getJokeCategories()
-
-        assertFalse(result.isSuccess)
+        val joke = result.getOrNull()!!
+        assertEquals("Programming", joke.category)
+        assertEquals(JokeType.SINGLE, joke.type)
     }
 
     @Test
-    fun `propagates original exception message when service returns Result failure`() = runTest {
-        val error = RuntimeException("network error")
-        val repo = makeRepository(FakeJokeService(Result.failure(error)))
-
-        val result = repo.getJokeCategories()
-
-        assertEquals("network error", result.exceptionOrNull()?.message)
-    }
-
-    // endregion
-
-    // region: failure path — service throws
-
-    @Test
-    fun `returns failure when service throws an exception`() = runTest {
-        val repo = makeRepository(ThrowingJokeService(RuntimeException("timeout")))
-
-        val result = repo.getJokeCategories()
-
-        assertFalse(result.isSuccess)
+    fun `getJoke single type has joke field set`() = runTest {
+        val result = makeRepo().getJoke("Programming")
+        val joke = result.getOrNull()!!
+        assertTrue(joke.joke?.isNotEmpty() == true)
     }
 
     @Test
-    fun `wraps thrown exception in Result failure`() = runTest {
-        val repo = makeRepository(ThrowingJokeService(RuntimeException("timeout")))
-
-        val result = repo.getJokeCategories()
-
-        assertEquals("timeout", result.exceptionOrNull()?.message)
+    fun `getJoke service failure propagates as Result failure`() = runTest {
+        val service = FakeJokeService(jokeResult = Result.failure(Throwable("Server error")))
+        val result = makeRepo(service).getJoke("Programming")
+        assertTrue(result.isFailure)
+        assertEquals("Server error", result.exceptionOrNull()?.message)
     }
 
-    // endregion
+    @Test
+    fun `getJokeCategories returns failure on empty service success`() = runTest {
+        val emptyDto = defaultCategoriesDTO().copy(categories = emptyList(), categoryAliases = emptyList())
+        val service = FakeJokeService(categoriesResult = Result.success(emptyDto))
+        val result = makeRepo(service).getJokeCategories()
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrNull()!!.isEmpty())
+    }
 }
