@@ -1,6 +1,6 @@
 package com.probrotechsolutions.laffalitto.model.network.services
 
-import com.probrotechsolutions.laffalitto.actual.EnvironmentVariables
+import com.probrotechsolutions.laffalitto.actual.EnvironmentVariablesContract
 import com.probrotechsolutions.laffalitto.model.network.KtorClient
 import com.probrotechsolutions.laffalitto.model.network.dto.JokeCategoryResponseDTO
 import com.probrotechsolutions.laffalitto.model.network.dto.JokeResponseDTO

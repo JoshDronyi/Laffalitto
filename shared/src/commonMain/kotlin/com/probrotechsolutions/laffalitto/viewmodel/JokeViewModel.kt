@@ -13,6 +13,8 @@ class JokeViewModel(
     private val jokeRepo: JokeRepositoryInterface
 ) : ViewModel() {
 
+    private val scope: CoroutineScope = coroutineScope ?: viewModelScope
+
     private val _jokeState: MutableStateFlow<JokeState> = MutableStateFlow(JokeState())
     val jokeState get() = _jokeState.asStateFlow()
 
@@ -20,7 +22,7 @@ class JokeViewModel(
         getCategories()
     }
 
-    fun getCategories() = viewModelScope.launch {
+    fun getCategories() = scope.launch {
         _jokeState.update {
             it.copy(isLoading = true, errorMsg = "")
         }
